@@ -8,23 +8,16 @@
     }, options);
     
     this.each(function(i, e) {
-      var $this = $(this);
-      var handler = function() {
-        var h = $this.height();
-        var $wrapper = $('<span>').css('border-color', options.color)
-                              .css('border-width', options.width)
-                              .css('border-style', 'solid')
-                              .css('border-radius', options.radius)
-                              .css('-moz-border-radius', options.radius)
-                              .css('-webkit-border-radius', options.radius)
-                              .css('overflow', 'hidden')
-                              .css('display', 'inline-block')
-                              .css('height', h + 'px');
-        $this.replaceWith($wrapper);
-        $wrapper.append($this);
-      };
-      $this.load(handler);
-      $this.resize(handler);
+      var $this = $(this);      
+      $this.css( {
+        'border-color': options.color,
+        'border-width': options.width,
+        'border-style': 'solid',
+        '-moz-border-radius' : options.radius,
+        '-webkit-border-radius' : options.radius,
+        'border-radius' : options.radius,
+        'overflow' : 'hidden'
+      });
     });
     return this;
   }
