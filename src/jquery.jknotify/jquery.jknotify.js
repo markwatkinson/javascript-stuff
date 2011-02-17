@@ -47,7 +47,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       'color': 'white',
       'top' : '2px',
       'width' : '250px',
-      'right' : '10px'
+      'right' : '10px',
+      'overflow' : 'auto'
+      // note that we also set max-height in the resizeHandler
     },
     $area = $('<div>').addClass('notify_area').css('display', 'none'),  
     applyCss = function(css) {
@@ -57,19 +59,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       $area.css(css);     
     };
   
+  var resizeHandler = function() {
+    $area.css('max-height', $(window).height() + 'px');
+  };
+    
   $(document).ready(function() {
-    applyCss(defaultCss);    
-    $('body').append($area);    
+    applyCss(defaultCss);
+    resizeHandler();
+    $(window).resize(resizeHandler);
+    $('body').append($area);
   });
   
   
+  // we use a queue with a lock for animations because of all the timers we 
+  // can't be sure that we won't end up with some horrible race condition
+  // So only one animation may execute at once.
   var _queue = [];
   var queue_lock = false;
   var queue = function(element, action) {
     var f = function() {
+      if (!queue_lock) queue_lock = true;
+      else {
+        setTimeout(f, 50);
+        return;
+      }
       _queue.push([element, action]);
+      queue_lock = false;      
       process_queue();
-    }
+    }    
     if (action == 'show')
       element.animate({'height':'toggle'}, 0, 'swing', f);
     else
@@ -83,7 +100,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     var e_ = _queue[0];
     var el = e_[0]
     var action = e_[1];
-    // race condition on _queue?
     _queue = _queue.slice(1);    
     if (action == 'show')
       show(el);
@@ -93,24 +109,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       collapse(el);
     else if (action == 'uncollapse')
       uncollapse(el);
-  }
-  
+    else { // shouldn't happen
+      if (console) console.log('jKnotify: Unknown action "' + action + '"');
+      release_lock();
+    }
+  }  
   
   var close = function(element) {
     var $this = element;
     if ($this.data('jKnotifyClosed'))
       return;
-    if ($this.is(':animated')) 
+    if ($this.is(':animated'))
       $this.stop(true, true);
       // this is a race condition
-      $this.data('jKnotifyClosed', true);
-      $this.animate({'height': 'toggle'}, 'fast', 'swing', function() {
-        $this.remove();
-        if ($area.is(':empty'))
-          $area.hide();
-        queue_lock = false;
-        process_queue();
-      });
+    $this.data('jKnotifyClosed', true);
+    $this.animate({'height': 'toggle'}, 'fast', 'swing', function() {
+      $this.remove();
+      if ($area.is(':empty'))
+        $area.hide();
+      release_lock();
+    });
   }
   var release_lock = function() {
     queue_lock = false;
@@ -161,7 +179,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       icon: false,
       passive: true,
       css: {
-        border: '3px solid gray'                
+        border: '2px solid gray',
+        'border-bottom': '1px solid gray',
+        'border-top' : '1px solid gray'
       },
       containerCss : defaultCss,
       closeOnButtonClick: true,
@@ -171,7 +191,16 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     var $e = $('<div>').css('vertical-align', 'middle')
                        .css(options.css);
     var collapse_timer = null;
-    $e.css('margin-bottom', '-' + $e.css('border-width'));
+    // So! we used to apply a negative margin on the bottom to prevent borders
+    // from stacking, but that now creates scrollbars. Instead, we're doing
+    // this. We assume the border-bottom and border-top are 50% of border-left
+    // and border-right and apply it to the top and bottom of the area 
+    // container. Note that the area CSS may be overriden if the user so wishes.
+//     $e.css('margin-bottom', '-' + $e.css('border-width'));
+    $area.css({ 
+      'border-bottom': options.css['border-bottom'],
+      'border-top': options.css['border-top']
+    });
     applyCss(options.containerCss);
     
     if (message == null)
@@ -204,7 +233,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                         .css('margin-right', '0.5em')
                                         .css('font-weight', 'bold');
         titleBar.append(title).append(closer);        
-        closer.click(function() {$e.jKnotifyClose();});
+        closer.click(function() {$e.jKnotifyClose(); return false;});
       }
       
       $e.append(titleBar);
@@ -212,8 +241,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     $e.append($('<div>').html(message).css({
       'margin-left': '1em',
       'margin-right': '1em',
-      'margin-bottom': '1em'
+      'margin-bottom': '1em'      
     }).addClass('knotify_message'));
+    
+
     
     if (options.passive) 
       $e.click(function() { $e.jKnotifyClose()} );
