@@ -83,7 +83,7 @@
             var h = parent.location.hash.replace(/^#|\s*$/g, '');
             return (h.match(/^\d+$/))? parseInt(h) : false;
           };
-      trigger = (getHash() !== false);        
+      trigger = (getHash() === false);        
       setInterval(function(){
         var hash = getHash();
         if (hash !== false && hash != element.data(active_str) 
