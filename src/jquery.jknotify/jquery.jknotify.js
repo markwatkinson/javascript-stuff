@@ -207,19 +207,19 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       return;
     
     if (options.titleBar) {
-      var titleBar = $('<div>').css('background-color', 
-                                    $area.css('background-color'))
-                              .css('opacity', '1.0')
-                              .css('margin', '0.5em')
-                              .css('position', 'relative')
+      var titleBar = $('<div>').css({
+        'background-color': $area.css('background-color'),
+        'opacity': '1.0',
+        'margin': '0.5em',
+        'position': 'relative'
+      });
       var title = $('<div>').css('width', '90%');
                                                      
       if (options.icon) {
         title.append(
           $('<img class="notification_icon">').attr('src', options.icon)
-          .css('vertical-align', 'middle')
-          .css('margin-left', '0.5em')
-        );    
+            .css({'vertical-align': 'middle', 'margin-left': '0.5em'})
+        );
       }
       title.append(
         $('<span>').html(options.title? options.title : '&nbsp')
@@ -227,14 +227,26 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       );
       titleBar.append(title);
       if (options.closable) {
-        var closer = $('<span>x</span>').css('position', 'absolute')
-                                        .css('top', '1px')
-                                        .css('right', '-2px')
-                                        .css('cursor', 'default')
-                                        .css('margin-right', '0.5em')
-                                        .css('font-weight', 'bold');
-        titleBar.append(closer);        
+        var closer = $('<span>x</span>').css({
+          'position': 'absolute',          
+          'top': '1px', 
+          'right': '-2px', 
+          'cursor': 'default', 
+          'margin-right': '0.5em', 
+          'font-weight': 'bold'
+        });
         closer.click(function() {$e.jKnotifyClose(); return false;});
+        
+        // prevent selection, if a user repeatedly clicks at the area where 
+        // they expect a closer to be, it'll end up selecting it and not 
+        // actually firing the close event
+        // http://stackoverflow.com/questions/1319126/prevent-highlight-of-text        
+        closer.get(0).onselectstart = function () { return false; };
+        closer.get(0).unselectable = 'on';
+        closer.css('-moz-user-select', 'none'); 
+        
+        titleBar.append(closer);        
+        
       }
       $e.append(titleBar);
     }
