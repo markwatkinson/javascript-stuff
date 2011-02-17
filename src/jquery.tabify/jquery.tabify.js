@@ -74,9 +74,8 @@
         
         e.preventDefault();
       });
-    });
-    var hoverFunc = function() { $(this).toggleClass(hover_class); };    
-    clickers.addClass(title_class).hover(hoverFunc, hoverFunc);
+    });    
+    clickers.addClass(title_class).hover(function() { $(this).toggleClass(hover_class); });
     tabs.addClass('tab');
     
     if (hashwatch) {
@@ -84,7 +83,7 @@
             var h = parent.location.hash.replace(/^#|\s*$/g, '');
             return (h.match(/^\d+$/))? parseInt(h) : false;
           };
-      trigger = (getHash !== false);        
+      trigger = (getHash() !== false);        
       setInterval(function(){
         var hash = getHash();
         if (hash !== false && hash != element.data(active_str) 
