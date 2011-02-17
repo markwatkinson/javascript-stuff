@@ -42,57 +42,59 @@
 
 (function($){
   $.fn.tabify = function(menu, hashwatch){
-    var element = this;
-    var tabs = this.children();
-    var clickers = $('a', menu);
-    var titles = menu.children();
+    var element = this,
+        tabs = this.children(),        
+        clickers = $('a', menu),
+        titles = menu.children(),
+        active_str = 'active',
+        selected_class = 'tab_selected',
+        hover_class = 'tab_hover',
+        title_class = 'tab_title',
+        trigger = false
+        ;
+        
     if (!clickers.length) clickers = titles;
-    element.data('active', -1);
-    
-    $(tabs).hide();
+    element.data(active_str, -1);    
+    tabs.hide();
 
     clickers.each(function(i){
-      $(this).click(function(e){ 
-        $(tabs[i]).fadeIn(250);
-        var active = element.data('active');
-        if (active != -1 && active != i && active < tabs.length)
-          $(element.children().get(element.data('active'))).hide();
+      $(this).click(function(e){
+        $(tabs.get(i)).fadeIn(250);
+        var active = element.data(active_str),
+            $el;
+        if (active > -1 && active != i && active < tabs.length)
+          $(element.children().get(element.data(active_str))).hide();
 
-        $('.tab_selected', menu).removeClass('tab_selected'); 
-        element.data('active', i);
-        if (hashwatch === true)
+        $('.' + selected_class, menu).removeClass(selected_class); 
+        element.data(active_str, i);
+        if (hashwatch)
           parent.location.hash = i;
-        $el = (($(this).parent()[0] == $(menu)[0])? $(this) : $(titles[i]));
-        $el.addClass('tab_selected');
+        $el = ($(this).parent().first() == $(menu).first())? $(this) : $(titles.get(i));
+        $el.addClass(selected_class);
         
         e.preventDefault();
       });
     });
-    // toggleClass seems unreliable with hover.
-    clickers.hover(function(e){$(this).addClass('tab_hover')},
-                  function(e){$(this).removeClass('tab_hover')}).addClass('tab_title');
+    var hoverFunc = function() { $(this).toggleClass(hover_class); };    
+    clickers.addClass(title_class).hover(hoverFunc, hoverFunc);
     tabs.addClass('tab');
     
-    var trigger = true;
-    if (hashwatch === true)
-    {
-      if (parent.location.hash.replace(/^#|\s*$/g, '').match(/^\d+$/))
-        trigger = false;
-        
+    if (hashwatch) {
+      var getHash = function() {
+            var h = parent.location.hash.replace(/^#|\s*$/g, '');
+            return (h.match(/^\d+$/))? parseInt(h) : false;
+          };
+      trigger = (getHash !== false);        
       setInterval(function(){
-        var hash = parent.location.hash.replace(/^#|\s*$/g, '');
-        if (hash.match(/^\d+$/))
-          hash = parseInt(hash);
-        else 
-          return;                    
-        if (hash != element.data('active') && hash < clickers.length)
+        var hash = getHash();
+        if (hash !== false && hash != element.data(active_str) 
+          && hash < clickers.length)
           $(clickers.get(hash)).trigger('click');
       }, 200);
     }
     
     if (trigger)
       clickers.first().trigger('click');
-
     
     return this;
   };
