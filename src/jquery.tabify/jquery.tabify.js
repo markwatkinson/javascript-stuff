@@ -56,11 +56,12 @@
     element.data(active_str, -1);    
     tabs.hide();
 
-    clickers.each(function(i){
-      $(this).click(function(e){
+    clickers.each(function(i) {
+      $(this).click(function(e) {
         $(tabs.get(i)).fadeIn(250);
         var active = element.data(active_str),
-            $el;
+            $el,
+            $t = $(this);
             
         if (active > -1 && active != i && active < tabs.length)
           $(element.children().get(element.data(active_str))).hide();
@@ -69,13 +70,14 @@
         element.data(active_str, i);
         if (hashwatch)
           parent.location.hash = i;
-        $el = ($(this).parent().first() == $(menu).first())? $(this) : $(titles.get(i));
+        $el = ($t.parent().first() == $(menu).first())? $t : $(titles.get(i));
         $el.addClass(selected_class);
         
         e.preventDefault();
       });
-    });    
-    clickers.addClass(title_class).hover(function() { $(this).toggleClass(hover_class); });
+    }).addClass(title_class)
+      .hover(function() { $(this).toggleClass(hover_class); });
+      
     tabs.addClass('tab');
     
     if (hashwatch) {
@@ -84,8 +86,8 @@
             return (h.match(/^\d+$/))? parseInt(h) : false;
           },
           watcher = function() {
-            var hash;
-            if ((hash = getHash()) !== false)
+            var hash = hash = getHash();
+            if (hash !== false)
               $(clickers.get(hash)).trigger('click');
           };
       trigger = (getHash() === false);    
