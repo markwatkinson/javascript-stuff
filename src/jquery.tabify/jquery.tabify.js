@@ -50,8 +50,7 @@
         selected_class = 'tab_selected',
         hover_class = 'tab_hover',
         title_class = 'tab_title',
-        trigger = false
-        ;
+        trigger = true;
         
     if (!clickers.length) clickers = titles;
     element.data(active_str, -1);    
@@ -62,6 +61,7 @@
         $(tabs.get(i)).fadeIn(250);
         var active = element.data(active_str),
             $el;
+            
         if (active > -1 && active != i && active < tabs.length)
           $(element.children().get(element.data(active_str))).hide();
 
@@ -82,16 +82,15 @@
       var getHash = function() {
             var h = parent.location.hash.replace(/^#|\s*$/g, '');
             return (h.match(/^\d+$/))? parseInt(h) : false;
+          },
+          watcher = function() {
+            var hash;
+            if ((hash = getHash()) !== false)
+              $(clickers.get(hash)).trigger('click');
           };
-      trigger = (getHash() === false);        
-      setInterval(function(){
-        var hash = getHash();
-        if (hash !== false && hash != element.data(active_str) 
-          && hash < clickers.length)
-          $(clickers.get(hash)).trigger('click');
-      }, 200);
+      trigger = (getHash() === false);    
+      setInterval(watcher, 200);
     }
-    
     if (trigger)
       clickers.first().trigger('click');
     
