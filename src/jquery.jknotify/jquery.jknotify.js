@@ -203,8 +203,8 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     });
     applyCss(options.containerCss);
     
-    if (message == null)
-      return;    
+    if (message === null)
+      return;
     
     if (options.titleBar) {
       var titleBar = $('<div>').css('background-color', 
@@ -225,6 +225,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         $('<span>').html(options.title? options.title : '&nbsp')
                   .css('margin-left', '0.5em')
       );
+      titleBar.append(title);
       if (options.closable) {
         var closer = $('<span>x</span>').css('position', 'absolute')
                                         .css('top', '1px')
@@ -232,10 +233,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
                                         .css('cursor', 'default')
                                         .css('margin-right', '0.5em')
                                         .css('font-weight', 'bold');
-        titleBar.append(title).append(closer);        
+        titleBar.append(closer);        
         closer.click(function() {$e.jKnotifyClose(); return false;});
       }
-      
       $e.append(titleBar);
     }
     $e.append($('<div>').html(message).css({

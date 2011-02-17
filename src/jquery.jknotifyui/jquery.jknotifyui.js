@@ -121,7 +121,6 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       // let's see how browsers handle it before changing it.
       $n.jK.selectInput = function(text, name, selections, default_) {
         var $i = $('<select>');
-        // XXX: this is a bug but I can't find the workaround right now.
         for (var key in selections) {
           if (!selections.hasOwnProperty(key))
             continue;
