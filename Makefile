@@ -8,7 +8,7 @@ all:
 % : 
 	cd $(SRC_DIR) && make $@
 
-install: all
+dist: all
 	mkdir -p $(MIN_DIR)
 	mkdir -p $(OUT_DIR)
 	for j in $(shell ls $(SRC_DIR)/*/ -d); do \
