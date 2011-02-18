@@ -42,10 +42,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
           $handle = null, // handle to the notification, will be returned by
                           // $.kNotify.
           options = {closeOnButtonClick:false, passive:false, closable:false},
-          inputs = {},
-          cb = null,
-          state = null,
-          p = null;
+          inputs = {},      // input elements keyed by their given name
+          cb = null,       // callback to fire when the form is closed
+          state = null,    // build state -- some elements will be contiguous 
+          // (buttons), whereas some will want to be separated with paragraph
+          // tags. This records what state we're in.
+          p = null;      // current P tag to write onto.
       
       var inputsToMap = function() {
         var map = {}, val, e, key;
@@ -54,7 +56,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             continue;
           e = inputs[key];
           if (e.is(':checkbox')) {
-            val = e.attr('checked');
+            val = !!e.attr('checked');
           } else {
             val = inputs[key].val();
           }
@@ -71,11 +73,11 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             state = newstate;
           p = $('<p>');
         }
-        
         return p;
       }
-      $n.jK = {};
       
+      
+      $n.jK = {};      
       
       $n.jK.form = function(method, action) {
         form = true;
