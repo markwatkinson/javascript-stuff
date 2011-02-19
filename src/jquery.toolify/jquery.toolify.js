@@ -44,7 +44,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
     var $el = $(this),
         tip = $('<div></div>').addClass('tooltip'),
               position = !output,
-              $out = position? $('body') : $(output);
+              $out = position? $('body') : $(output),
               
         show = function(event) {
           $out.append(tip);

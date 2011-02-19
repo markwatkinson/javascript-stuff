@@ -67,6 +67,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         }
         return map;
       }
+      /**
+       * @param {string=} newstate
+       */
       var changeState = function(newstate) {
         if (state !== newstate) {
           if (typeof newstate !== 'undefined')
@@ -85,7 +88,10 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
         $n.append($e);
         return $n;
       }
-
+      
+      /**
+       * @param {*=} value
+       */
       $n.jK.close = function(value) {
         if (cb && typeof value !== 'undefined')
           cb(value);
@@ -180,7 +186,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
             });
           }
         }
-        $i = $('<input type="' + ( (type == 'submit')? 'submit' : 'button') + '">').attr('value', text);
+        var $i = $('<input type="' + ( (type == 'submit')? 'submit' : 'button') + '">').attr('value', text);
         $i.click(function() {
           if (cbs[type])
             cbs[type]();

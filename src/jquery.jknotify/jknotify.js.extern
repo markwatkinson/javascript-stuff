@@ -1,0 +1,17 @@
+/**
+ * This is hand written and needs updating manually
+ */
+
+
+/**
+ * @extends {jQueryObject}
+ * @constructor
+ */
+function jKnotifyObject() {}
+
+jKnotifyObject.prototype.jKnotifyClose = function() {};
+
+/**
+ * @return {jKnotifyObject}
+ */
+jQueryObject.prototype.jKnotify = function(message, options) {};

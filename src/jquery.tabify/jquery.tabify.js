@@ -83,7 +83,7 @@
     if (hashwatch) {
       var getHash = function() {
             var h = parent.location.hash.replace(/^#|\s*$/g, '');
-            return (h.match(/^\d+$/))? parseInt(h) : false;
+            return (h.match(/^\d+$/))? parseInt(h, 10) : false;
           },
           watcher = function() {
             var hash = hash = getHash();

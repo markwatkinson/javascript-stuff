@@ -31,6 +31,11 @@ ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
+/**
+ * @param {string} json
+ * @param {Array=} errors
+ * @return {*}
+ */
 function readJson(json, errors) {  
   var parsed = null,
       i = 0,
@@ -79,6 +84,9 @@ function readJson(json, errors) {
     }
     return false;
   }
+  /**
+   * @param {number=} length
+   */
   function peek(length) {
     length = (typeof length === 'undefined' || length < 1)? 1 : length;
     if (i < json.length) {
@@ -431,8 +439,10 @@ function readJson(json, errors) {
 }
 
 
-
-// Encodes an object to a JSON string
+/**
+ * @param {*} object
+ * @return {string}
+ */
 function writeJson(object) {  
   var i, vals;
   
