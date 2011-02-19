@@ -36,8 +36,13 @@ $(SRC_):  $(SRC)
 	echo "/* Build date: $(DATE) */" > $(SRC_)
 	cat $(SRC) >> $(SRC_)
 
+
+# closure writes an empty file on failure. This seems to  confuse make
 $(MIN_): $(SRC)
-	$(JSC) $(JSC_FLAGS) --js $(SRC) --js_output_file $(MIN_)
+	$(JSC) $(JSC_FLAGS) --js $(SRC) --js_output_file $(MIN_) || {\
+		rm $(MIN_); \
+		false; \
+		}
 
 clean:
 	rm -rf $(BIN_DIR)
