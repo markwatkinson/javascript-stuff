@@ -441,6 +441,8 @@ function readJson(json, errors) {
 /**
  * @param {*} object
  * @return {string}
+ * 
+ * FIXME: this will infinite recurse on circular references.
  */
 function writeJson(object) {  
   var i, vals;
@@ -453,7 +455,7 @@ function writeJson(object) {
     // This might be wrong.
     return '"' + object.replace(/(\\)*(["'])/g, function($0, $1, $2) {
       $1 = $1 || '';
-      var escaped = ($1.length % 2 === 1);
+      var escaped = ($1.length % 2);
       if (escaped) {
         if ($2 === "'") {
           return $1.slice(1) + $2;
