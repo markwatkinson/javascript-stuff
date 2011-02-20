@@ -1,0 +1,100 @@
+/* Hand written, update manually */
+
+/**
+ * @extends {jQueryObject}
+ * @constructor
+ */
+function jKnotifyUiObject() {}
+
+/**
+ * @return {jKnotifyUiObject}
+ */
+jQuery.jKnotifyUi = function() {}
+
+jKnotifyUiObject.jK = {}
+
+/**
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.jKnotifyUi = function() {}
+
+/**
+ * @param {string} method
+ * @param {string} action
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.form = function(method, action) {}
+
+/**
+ * @param {*=} value
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.close = function(value) {}
+
+/**
+ * @param {string} icon
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.icon = function(icon) {}
+
+/**
+ * @param {string} title
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.title = function(title) {}
+
+
+/**
+ * @param {function(Object)} cb_
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.callback = function(cb_) {}
+
+/**
+ * @param {string} text
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.text = function(text) {}
+
+/**
+ * @param {string} text
+ * @param {string} name
+ * @param {boolean=} checked
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.toggleInput = function(text, name, checked) {}
+
+/**
+ * @param {string} text
+ * @param {string} name
+ * @param {Object} selections
+ * @param {string=} default_
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.selectInput = function(text, name, selections, default_) {}
+
+/**
+ * @param {string} text
+ * @param {string} name
+ * @param {Object=} options
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.textInput = function(text, name, options) {}
+
+/**
+ * @param {string} text
+ * @param {string} type
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.button = function(text, type) {}
+
+/**
+ * @param {boolean} c
+ * @return {jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.closable = function(c) {}
+
+/**
+ * @return jKnotifyUiObject}
+ */
+jKnotifyUiObject.jK.finish = function() {}

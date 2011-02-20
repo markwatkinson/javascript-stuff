@@ -14,4 +14,4 @@ jKnotifyObject.prototype.jKnotifyClose = function() {};
 /**
  * @return {jKnotifyObject}
  */
-jQueryObject.prototype.jKnotify = function(message, options) {};
+jQuery.jKnotify = function(message, options) {};
