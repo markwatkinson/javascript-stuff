@@ -98,16 +98,15 @@ function readJson(json, errors) {
   
   // maybe these are cheating
   function isspace(c) {
-    return c.match(/^\s+$/);
+    return (c === ' ' || c === '\t' || c === '\f' || c === '\r' || c === '\n');    
   }  
   function isdigit(c) {
-    return c.match(/^[0-9]$/);
-  }
-  function isdigit1to9(c) {
-    return c.match(/^[1-9]$/);
+    var cc = c.charCodeAt(0);
+    return (cc >= 48 && cc <= 57);
   }
   function isalpha(c) {
-    return c.match(/[a-zA-Z]/);
+    var cc = c.charCodeAt(0);
+    return ( (c >= 65 && c <= 90) || (c >= 97 && c <= 122))
   }
   
   // consumes whitespace
@@ -485,5 +484,5 @@ function writeJson(object) {
   else if (object.toString) 
     return object.toString();
   else // meh
-    return '';
+    return '' + object;
 } 
