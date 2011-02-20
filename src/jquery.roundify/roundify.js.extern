@@ -1,0 +1,6 @@
+/**
+ * @param {Object.<string,*>=} options
+ * @return jQueryObject
+ */
+jQueryObject.prototype.roundify = function(options) {}
+

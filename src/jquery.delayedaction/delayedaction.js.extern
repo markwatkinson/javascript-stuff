@@ -1,0 +1,9 @@
+/**
+ * @param {function(Object=, Object=)} cb
+ * @param {number=} delay_
+ * @param {boolean=} lazy_
+ * @param {*=} cb_data
+ * @return jQueryObject
+ */
+jQueryObject.prototype.delayedAction = function(cb, delay_, lazy_, cb_data) {}
+

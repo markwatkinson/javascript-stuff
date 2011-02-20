@@ -1,0 +1,7 @@
+/**
+ * @param {jQueryObject} menu
+ * @param {boolean=} hashwatch
+ * @return jQueryObject
+ */
+jQueryObject.prototype.tabify = function(menu, hashwatch) {}
+

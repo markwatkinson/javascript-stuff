@@ -1,0 +1,7 @@
+/**
+ * @param {string|jQueryObject|function(this:jQueryObject):string} tooltip
+ * @param {jQueryObject=} output
+ * @return {jQueryObject}
+ */
+jQueryObject.prototype.toolify = function(tooltip, output) {};
+

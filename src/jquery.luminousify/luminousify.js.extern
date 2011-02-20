@@ -1,0 +1,5 @@
+/**
+ * @param {Object.<string,*>=} options
+ * @return {jQueryObject}
+ */
+jQueryObject.prototype.luminousify = function(options) {};
