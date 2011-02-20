@@ -86,11 +86,11 @@
             return (h.match(/^\d+$/))? parseInt(h, 10) : false;
           },
           watcher = function() {
-            var hash = hash = getHash();
-            if (hash !== false)
+            var hash = getHash();
+            if (hash !== false && element.data(active_str) !== hash)
               $(clickers.get(hash)).trigger('click');
           };
-      trigger = (getHash() === false);    
+      trigger = (getHash() === false);
       setInterval(watcher, 200);
     }
     if (trigger)
