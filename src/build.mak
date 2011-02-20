@@ -42,7 +42,7 @@ $(MIN_): $(SRC)
 	$(JSC) $(JSC_FLAGS) --js $(SRC) --js_output_file $(MIN_) || {\
 		rm $(MIN_); \
 		false; \
-		}
+	}
 
 clean:
 	rm -rf $(BIN_DIR)

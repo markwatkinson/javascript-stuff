@@ -1,8 +1,8 @@
 SUBDIRS = $(shell ls -d */)
-
 % : 
 	for d in $(SUBDIRS); do \
-		cd $$d && make $@ && cd ../ ;\
+		echo "Building $$d"; \
+		cd $$d && make -s $@ && cd ../ ;\
 	done
 
 build:
