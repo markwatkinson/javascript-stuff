@@ -106,7 +106,7 @@ function readJson(json, errors) {
   }
   function isalpha(c) {
     var cc = c.charCodeAt(0);
-    return ( (c >= 65 && c <= 90) || (c >= 97 && c <= 122))
+    return ( (cc >= 65 && cc <= 90) || (cc >= 97 && cc <= 122))
   }
   
   // consumes whitespace
