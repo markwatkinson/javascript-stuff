@@ -1,0 +1,6 @@
+/**
+ * @param {Object.{cb}=} options
+ * @return {jQueryObject}
+ */
+jQueryObject.prototype.sortify = function(options) {};
+
