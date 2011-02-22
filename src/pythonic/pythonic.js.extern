@@ -1,0 +1,372 @@
+/**
+ * This is hand written. If pythonic.js changes we need to change it here too!
+ * I wish the compiler would export this stuff
+ */
+
+/**
+  * @param {string} text 
+  * @return {string}
+  */
+RegExp.pyescape = function(text) {}
+
+/**
+ * @param {number} i
+ * @param {string=} def 
+ * @return {string|undefined}
+ */
+String.prototype.pyget = function(i, def) {}
+
+/**
+ * @param {number} i
+ * @param {*=} def 
+ * @return {*}
+ */
+Array.prototype.pyget = function(i, def) {}
+
+/**
+ * @param {...*} var_args
+ * @return {boolean}
+ */
+function pyall(var_args) {}
+
+
+/**
+ * @param {...*} var_args
+ * @return {boolean}
+ */
+function pyany(var_args) {}
+
+/**
+ * @param {Array} seq
+ * @param {number=} start
+ * @return {Array.<Array.<number, *>>}
+ */
+function pyenumerate(seq, start) {}
+
+/**
+ * @param {function(*,...):*} func 
+ * @param {...Array|string} var_args
+ * @return {Array|string}
+ */
+function pymap(func, var_args) {}
+
+
+/**
+ * @param {?function(*,...):boolean} func 
+ * @param {Array|string} obj
+ * @return {Array|string}
+ */
+function pyfilter(func, obj) {}
+
+
+/**
+ * @param {function(*, *):*} func 
+ * @param {Array} obj 
+ * @param {*=} initializer
+ * @return {*}
+ */
+function pyreduce(func, obj, initializer) {}
+
+/**
+ * @param {...function(*):*|Array.<function(*):*>} funcs
+ * @return {function(*):*}
+ */
+function pycompose(funcs) {}
+
+/**
+ * Last argument may optionally be a cmp function.
+ * Declare theses as * because we can totally override everything 
+ * via the cmp
+ * @param {...*} var_args
+ * @return {*}
+ */  
+function pymax(var_args) {}
+
+
+/**
+ * Last argument may optionally be a cmp function.
+ * @param {...*} var_args
+ * @return {*}
+ */  
+function pymin(var_args) {}
+
+/** 
+ * @param {...Array.<*>} var_args
+ * @return {Array.<*>}
+ */
+function pyzip(var_args) {}
+
+
+
+/**
+ * @param {number} start
+ * @param {number=} end
+ * @param {number=} stride
+ * @return {Array.<number>}
+ */
+function pyrange(start, end, stride) {}
+
+
+/**
+ * @param {Object|string|Array=} obj 
+ * @return {Array}
+ */
+function pylist(obj) {}
+
+
+/** 
+ * Returns the sum of a sequence 
+ * @param {Array.<number>} obj
+ * @param {number=} start
+ * @return {number}
+ */
+function pysum(obj, start) {}
+
+/** Returns the product of a sequence
+ * @param {Array.<number>} obj
+ * @param {number=} start
+ * @return {number}
+ */
+function pyproduct(obj, start) {}
+
+/**
+  * @param {...*} var_args
+  * @return {string}
+  *  
+  */
+
+String.prototype.pyformat = function(var_args) { }
+
+
+/**
+ * @param {?number=} start
+ * @param {?number=} end
+ * @param {?number=} stride
+ * @return {string}
+ */
+String.prototype.pyslice = function(start, end, stride) {}
+
+
+/**
+ * 
+ * @param {number=} start
+ * @param {number=} end
+ * @param {number=} stride
+ * @return {Array}
+ */
+Array.prototype.pyslice = function(start, end, stride) {}
+
+/** 
+ * @return {string}
+ */
+String.prototype.pycapitalize = function() {}
+
+
+/**
+ * @param {number} width
+ * @param {string=} fillchar
+ * @return {string}
+ */
+String.prototype.pycenter = function(width, fillchar) {}
+
+/**
+ * @param {string|RegExp} sub
+ * @param {number=} start
+ * @param {number=} end
+ * @return {number}
+ */
+String.prototype.pycount = function(sub, start, end) {}
+
+
+/**
+ * @param {string|Array.<string>} suffix
+ * @param {number=} start
+ * @param {number=} end
+ * @return {boolean}
+ */
+String.prototype.pyendswith = function(suffix, start, end) {}
+
+
+/**
+ * @param {number=} tabsize
+ * @return {string}
+ */
+String.prototype.pyexpandtabs = function(tabsize) {}
+
+
+/**
+ * @param {string|RegExp} sub
+ * @param {number=} start
+ * @param {number=} end
+ * @return {number}
+ */
+String.prototype.pyfind = function(sub, start, end) {}
+
+/**
+ * Same as find, but throws exception if not found
+ * @param {string} sub
+ * @param {number=} start
+ * @param {number=} end 
+ * @return {number}
+ */
+String.prototype.pyindex = function(sub, start, end) {}
+
+
+/**
+ * @return {boolean}
+ */
+String.prototype.pyisalnum = function() {}
+/**
+ * @return {boolean}
+ */
+String.prototype.pyisalpha = function() {}
+/**
+ * @return {boolean}
+ */
+String.prototype.pyisdigit = function() {}
+/**
+ * @return {boolean}
+ */
+String.prototype.pyislower = function() {}
+/**
+ * @return {boolean}
+ */
+String.prototype.pyisspace = function() {}
+
+/**
+ * @return {boolean}
+ */
+String.prototype.pyistitle = function() {}
+/**
+ * @return {boolean}
+ */
+String.prototype.pyisupper = function() {}
+
+/**
+ * @param {Array} array
+ * @return {string}
+ */
+String.prototype.pyjoin = function(array) {}
+
+/**
+ * @param {number} width
+ * @param {string=} fillchar
+ * @return {string}
+ */
+String.prototype.pyljust = function(width, fillchar) {}
+
+
+/**
+ * @return {string}
+ */
+String.prototype.pylower = function() {}
+/**
+ * @param {string=} chars
+ * @return {string}
+ */
+String.prototype.pylstrip = function(chars) {}
+
+/**
+ * @param {string|RegExp} sep
+ * @return {Array.<string>}
+ */
+String.prototype.pypartition = function(sep) {}
+
+/**
+ * @param {string|RegExp} sep
+ * @return {Array.<string>}
+ */
+String.prototype.pyrpartition = function(sep) {}
+
+/**
+ * @param {string|RegExp} old
+ * @param {string} new_
+ * @param {number=} count
+ * @return {string}
+ */
+String.prototype.pyreplace = function(old, new_, count) {}
+
+/**
+ * @param {string|RegExp} sub 
+ * @param {?number=} start
+ * @param {?number=} end 
+ * @param {?boolean=} rtl
+ * @return {number}
+ */
+String.prototype.pyrfind = function(sub, start, end, rtl) {}
+
+/**
+ * @param {string} sub 
+ * @param {?number=} start
+ * @param {?number=} end 
+ * @return {number}
+ */
+String.prototype.pyrindex = function(sub, start, end) {}
+
+/** 
+ * @param {number} width
+ * @param {?string=} fillchar
+ * @return {string}
+ */
+String.prototype.pyrjust = function(width, fillchar) {}
+
+/**
+ * @param {?string=} chars
+ * @return {string}
+ */
+String.prototype.pyrstrip = function(chars) {}
+
+/**
+ * @param {string|RegExp=} sep 
+ * @param {number=} maxsplit
+ * @return {Array.<string>}
+ */
+String.prototype.pysplit = function(sep, maxsplit) {}
+
+/**
+ * @param {string|RegExp=} sep 
+ * @param {number=} maxsplit
+ * @return {Array.<string>}
+ */
+String.prototype.pyrsplit = function(sep, maxsplit) {  }
+
+/**
+ * @param {boolean=} keepends
+ * @return {Array.<string>}
+ */
+String.prototype.pysplitlines = function(keepends) {}
+
+/**
+ * @param {Array.<string>|string} suffix
+ * @param {number=} start
+ * @param {number=} end 
+ * @return {boolean}
+ */
+String.prototype.pystartswith = function(suffix, start, end) {}
+
+/**
+ * @param {string=} chars
+ * @return {string}
+ */
+String.prototype.pystrip = function(chars) {}
+
+/**
+ * @return {string}
+ */
+String.prototype.pyswapcase = function() {}
+
+/**
+ * @return {string}
+ */
+String.prototype.pytitle = function() {}
+
+/**
+ * @return {string}
+ */
+String.prototype.pyupper = function() {}
+
+/**
+ * @param {number} num 
+ * @return {string}
+ */
+String.prototype.pyzfill = function(num) {}

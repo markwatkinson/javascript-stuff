@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="robots" content="noindex" />  
+    <title>pythonic.js tests</title>
+    <meta content="">
+    <style></style>
+    
+    <script type="text/javascript" src="../pythonic.js"></script>
+
+    <script type='text/javascript'>
+var readyfunc = function(){
+  var num_errs = 0, num_tests = 0;
+  function _cmp(a, b) {
+    return a === b;
+  }
+  
+  function _array_cmp(a, b) {
+    var i;
+    if (a.length != b.length)
+      return false;
+    for (i=0; i<a.length; i++) {
+      var data1 = a[i], data2=b[i];
+      if (!(_get_cmp_func(data1, data2)(data1, data2)))      
+        return false;
+    }
+    return true;
+  }
+  
+  function _get_cmp_func(data, data1) {
+    if (typeof(data) == 'undefined' || typeof(data1) == 'undefined' 
+      || data == null || data1 == null)
+      return _cmp;
+      
+    if (data.constructor.toString().indexOf('Array') != -1
+      && 
+      data1.constructor.toString().indexOf('Array') != -1)
+      return _array_cmp;
+    if (data.constructor == Array 
+      && data1.constructor == Array)
+      return _array_cmp;
+    return _cmp;
+  }
+  
+  function test(input, output) {
+    var out;
+    try {
+      out = eval(input);
+    } catch(e) {
+      out = e;
+    }
+    var cmp = _get_cmp_func(output, out);
+    if (!cmp(out, output))
+    {
+      num_errs++;
+      document.getElementById('body').innerHTML += 
+        '<pre>`{}`: expected `{}` got `{}`</pre>'.pyformat(input, output, out);      
+    }
+    num_tests++;
+  }  
+  
+  var tests = [
+    ["[1,2,3].pyget(1)", 2],
+    ["[1,2,3].pyget(3, null)", null],
+    ["var a = function(x){}; a.length", 1],
+    
+    
+    ["pyall([1, 2, 3])", true],
+    ["pyall(1, 2, 3)", true],
+    ["pyall([])", true],
+    ["pyall()", true],
+    ["pyall([1, 2, 0])", false],
+    ["pyall(1, 2, 0)", false],
+    ["pyall([0])", false],
+    ["pyall(true, false)", false],
+    
+    ["pyany([1, 2, 3])", true],
+    ["pyany(1, 2, 3)", true],
+    ["pyany([1, 0, 0])", true],
+    ["pyany([0, 1, 0])", true],
+    ["pyany([0, 0, 1])", true],
+    ["pyany(1, 0, 0)", true],
+    ["pyany(0, 1, 0)", true],
+    ["pyany(0, 0, 1)", true],
+    ["pyany([0, 0, 0])", false],
+    ["pyany(0, 0, 0)", false],
+    ["pyany()", false],
+    ["pyany([])", false],
+    
+    ["pymax([1, 2, 3])", 3],
+    ["pymax([3, 2, 1])", 3],
+    ["pymax(1, 2, 3)", 3],
+    ["pymax(3, 2, 1)", 3],
+    
+    ["pymin([1, 2, 3])", 1],
+    ["pymin([3, 2, 1])", 1],
+    ["pymin(1, 2, 3)", 1],
+    ["pymin(3, 2, 1)", 1],    
+    ["try{pymin([])}catch(e){}", undefined],
+    ["try{pymin()}catch(e){}", undefined],
+    ["try{pymax([])}catch(e){}", undefined],
+    ["try{pymax()}catch(e){}", undefined],
+    
+    ["pymax({age:27}, {age:33}, {age:21}, function(x,y){return x.age-y.age;}).age", 33],
+    ["pymax([{age:27}, {age:33}, {age:21}], function(x,y){return x.age-y.age;}).age", 33],
+    ["pymax({age:27}, {age:33}, {age:47}, function(x,y){return x.age-y.age;}).age", 47],
+    ["pymax([{age:51}, {age:33}, {age:21}], function(x,y){return x.age-y.age;}).age", 51],    
+    
+    ["pymin({age:27}, {age:33}, {age:21}, function(x,y){return x.age-y.age;}).age", 21],
+    ["pymin([{age:27}, {age:33}, {age:21}], function(x,y){return x.age-y.age;}).age", 21],
+    ["pymin({age:27}, {age:33}, {age:47}, function(x,y){return x.age-y.age;}).age", 27],
+    ["pymin([{age:51}, {age:19}, {age:21}], function(x,y){return x.age-y.age;}).age", 19],        
+    
+    
+    
+    ["pyrange(10)", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]],
+    ["pyrange(0, 10)", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]],
+    ["pyrange(1, 10)", [1, 2, 3, 4, 5, 6, 7, 8, 9]],
+    ["pyrange(-3, 3)", [-3, -2, -1, 0, 1, 2]],
+    ["pyrange(0, 1)", [0]],
+    ["pyrange(0, 0)", []],
+    ["pyrange(1, 0)", []],
+    ["pyrange(10, 0, -1)", [10, 9, 8, 7, 6, 5, 4, 3, 2, 1]],
+    ["pyrange(10, 0, -2)", [10, 8, 6, 4, 2]],
+    ["pyrange(0, 10, 2)", [0, 2, 4, 6, 8]],
+    ["pyrange(0, 10, 3)", [0, 3, 6, 9]],
+    ["pyrange(0, 10, 5)", [0, 5]],
+    ["pyrange(0, 10, 7)", [0, 7]],    
+    ["pyrange(0, 10, 7)", [0, 7]],
+    
+    ["pylist([1, 2, 3])", [1, 2, 3]],
+    ["pylist('hello')", ['h', 'e', 'l', 'l', 'o']],
+    ["pylist()", []],
+    
+    
+    ["pyenumerate(['h', 'e', 'l', 'l', 'o'])", [ 
+      [0, 'h'], 
+      [1, 'e'], 
+      [2, 'l'],
+      [3, 'l'], 
+      [4, 'o']
+      ]
+    ],
+    ["pyenumerate(['h', 'e', 'l', 'l', 'o'], 5)", [ 
+      [5, 'h'], 
+      [6, 'e'], 
+      [7, 'l'],
+      [8, 'l'], 
+      [9, 'o']
+      ]
+    ],
+    ["pyenumerate('hello')", [ 
+      [0, 'h'], 
+      [1, 'e'], 
+      [2, 'l'],
+      [3, 'l'], 
+      [4, 'o']
+      ]
+    ],
+    ["pyenumerate(1)", []],
+    
+    ["pyzip([1, 5], [2, 6], [3, 7], [4, 8])", [ [1, 2, 3, 4], [5, 6, 7, 8]] ],
+    ["pyzip([1, 5])", [ [1], [5] ]],
+    ["pyzip( [1, 2, 3], [4, 5], [6])", [ [1, 4, 6] ]],
+    ["pyzip([6], [4, 5], [1, 2, 3])", [ [6, 4, 1] ]],
+    
+    ["pymap(function(x){return x;}, [1, 2, 3])", [1, 2, 3]],
+    ["pymap(function(x){return x+1;}, [1, 2, 3])", [2, 3, 4]],
+    ["pymap(function(x){return x.toUpperCase();}, 'hello')", ['H','E','L','L','O']],
+    ["pymap(function(x){return x.toUpperCase();}, '')", []],
+    ["pymap(function(x){return x.toUpperCase();}, [])", []],    
+    ["pymap(function(x,y,z){return x*y*z;}, [1, 5, 9], [2, 4, 8], [3, 6, 9])",
+      [6, 120, 648]],
+    ["pymap(function(x,y,z){return (x+y)*((z == null)?1 : z);}, [20, 1, 9], [1, 4, 8], [6, 9])", [126, 45, 17]],
+
+    
+    
+    ["pyfilter(null, [1, 2, 3])", [1, 2, 3]],
+    ["pyfilter(null, [0, 1, 2, 3])", [1, 2, 3]],
+    ["pyfilter(function(x){return x == 'h'}, 'hello')", 'h'],
+    ["pyfilter(function(x){return x%2;}, pyrange(10))", [1, 3, 5, 7, 9]],
+    
+    ["pyreduce(function(x,y){return x+y;}, pyrange(10))", 45 ],
+    ["pyreduce(function(x,y){return x+y;}, pyrange(10), 10)", 55 ],
+    ["pyreduce(function(x,y){return x*y;}, pyrange(10))", 0 ],
+    ["pyreduce(function(x,y){return x*y;}, pyrange(1, 10))", 362880 ], //9!
+    ["pyreduce(function(x,y){return x*y;}, pyrange(1, 10), 10)", 3628800 ], //10!
+    
+    // now we're onto the object methods
+    // loads of stuff relies on slice so make sure it's working first.
+    ["'hello'.pyslice()", 'hello'],
+    ["'hello'.pyslice(1)", 'ello'],
+    ["'hello'.pyslice(1, 5)", 'ello'],
+    ["'hello'.pyslice(1, 4)", 'ell'],
+    ["'hello'.pyslice(1, -1)", 'ell'],
+    ["'hello'.pyslice(0, 0)", ''],
+    ["'hello'.pyslice(1, 0)", ''],
+    ["'hello'.pyslice(0, 5, -1)", ''],    
+    ["'hello'.pyslice(null, null, -1)", 'olleh'],
+    ["'hello'.pyslice(undefined, undefined, -1)", 'olleh'],
+    ["'hello'.pyslice(5, 0, -1)", 'olle'],
+    ["'hello'.pyslice(6, 3, -1)", 'o'],
+    
+    
+    
+    ["'hello'.pycapitalize()", 'Hello'],
+    ["'Hello'.pycapitalize()", 'Hello'],
+    ["'_llo'.pycapitalize()", '_llo'],
+    ["'3llo'.pycapitalize()", '3llo'],
+    ["'HeLlO'.pycapitalize()", 'Hello'],
+    ["'HELLO'.pycapitalize()", 'Hello'],
+    
+    ["'x'.pycenter(10)", '    x     '], 
+    ["'x'.pycenter(10, '_')", '____x_____'],
+    ["'xx'.pycenter(10, '_')", '____xx____'],
+    ["'xx'.pycenter(1, '_')", 'xx'],
+    ["'xx'.pycenter(2, '_')", 'xx'],
+    
+    ["'\tx\t'.pyexpandtabs()", '        x        '],
+    ["'\tx'.pyexpandtabs()", '        x'],
+    ["'\tx'.pyexpandtabs(1)", ' x'],
+    ["'\tx'.pyexpandtabs(4)", '    x'],
+    
+    ["'x'.pyljust(10)", 'x         '],
+    ["'x'.pyljust(10, '_')", 'x_________'],
+    ["'xx'.pyljust(10)", 'xx        '],
+    ["'xx'.pyljust(10, '_')", 'xx________'],
+    ["'x'.pyrjust(10)", '         x'],
+    ["'x'.pyrjust(10, '_')", '_________x'],
+    ["'xx'.pyrjust(10)", '        xx'],
+    ["'xx'.pyrjust(10, '_')", '________xx'],
+    
+    ["'123'.pyzfill(4)", "0123"],
+    ["'+123'.pyzfill(4)", "+123"],
+    ["'-123'.pyzfill(4)", "-123"],
+    ["'+-123'.pyzfill(4)", "+-123"],
+    ["''.pyzfill(4)", "0000"],
+    
+    
+    ["'01234567890'.pycount('1')", 1],
+    ["'01234567890'.pycount('-1')", 0],
+    ["'01234567890'.pycount('0')", 2],
+    ["'01234567890'.pycount(/\\d/)", 11],
+    ["'01234567890'.pycount(/\\d+/)", 1],
+    ["'01234567890'.pycount('')", 12],
+    ["'01234567890'.pyfind('1')", 1],
+    ["'01234567890'.pyfind('-1')", -1],
+    ["'01234567890'.pyfind('0')", 0],
+    ["'01234567890'.pyfind(/\\d/)", 0],
+    ["'01234567890'.pyfind(/\\d+/)", 0],
+    ["'01234567890'.pyfind('')", 0],
+    ["'01234567890'.pyrfind('1')", 1],
+    ["'01234567890'.pyrfind('-1')", -1],
+    ["'01234567890'.pyrfind('0')", 10],
+    
+    ["'0123456789'.pyrfind('0')", 0],
+    ["'0123456789'.pyrfind('0', 0, null, false)", 0],
+    
+    ["'01234567890'.pyrfind(/\\d/g)", 10],
+    ["'01234567890'.pyrfind(/\\d{3}/g)", 8],
+    ["'01234567890'.pyrfind(/\\d{3}/g, null, null, false)", 6],
+    ["'aaaaa'.pyrfind('aa')", 3],
+    ["'aaaaa'.pyrfind('aa', null, null, false)", 2],
+    ["'01234567890'.pyrfind('')", 11],    
+    // index and rindex omitted as they simply wrap find/rfind and raise an 
+    // exception if the result is -1
+    
+    ["'xyz'.pyisalnum()", true],
+    ["'xyz90'.pyisalnum()", true],
+    ["'xyz90_'.pyisalnum()", false],
+    ["'_'.pyisalnum()", false],
+    ["''.pyisalnum()", false],
+    
+    ["'xyz'.pyisalpha()", true],
+    ["'xyz90'.pyisalpha()", false],
+    ["'xyz_'.pyisalnum()", false],    
+    ["''.pyisalnum()", false],
+    
+    ["'123456789'.pyisdigit()", true],
+    ["'123a'.pyisdigit()", false],    
+    ["''.pyisdigit()", false],
+    
+    ["'hello'.pyislower()", true],
+    ["'hello  12'.pyislower()", true],        
+    ["'Hello'.pyislower()", false],    
+    ["''.pyislower()", false],    
+    ["'43245'.pyislower()", false],    
+
+    ["'hello'.pyisspace()", false],
+    ["'   hello      '.pyisspace()", false],
+    ["'\\n'.pyisspace()", true],
+    ["'\\f'.pyisspace()", true],
+    ["'\\r\\n'.pyisspace()", true],
+    ["'  '.pyisspace()", true],
+    ["' \\t '.pyisspace()", true],
+    ["''.pyisspace()", false],
+    
+    ["'Title String'.pyistitle()", true],
+    ["'Title_String'.pyistitle()", true],
+    ["'Title101String'.pyistitle()", true],
+    ["'Title STring'.pyistitle()", false],
+    ["'TitLe_String'.pyistitle()", false],
+    ["'TitlE101String'.pyistitle()", false],
+    ["'title string'.pyistitle()", false],
+    ["'T string'.pyistitle()", false],
+    ["'T S'.pyistitle()", true],    
+    ["''.pyistitle()", false],
+    
+    ["'HELLO'.pyisupper()", true],
+    ["'H3LL0  12'.pyisupper()", true],   
+    ["'HI THERE!'.pyisupper()", true],
+    ["'hello'.pyisupper()", false],
+    ["'hello  12'.pyisupper()", false],        
+    ["'Hello'.pyisupper()", false],    
+    ["''.pyisupper()", false],    
+    ["'43245'.pyisupper()", false],    
+    
+    
+    
+    ["','.pyjoin([1, 2, 3])", '1,2,3'],
+    ["''.pyjoin([1, 2, 3])", '123'],
+    ["''.pyjoin(['h', 'e', 'l', 'l', 'o'])", 'hello'],
+    
+    
+    ["'hello'.pylower()", 'hello'],
+    ["'HELLO'.pylower()", 'hello'],
+    ["'Hello'.pylower()", 'hello'],
+    ["'Hello1234'.pylower()", 'hello1234'],
+    ["'hello'.pyupper()", 'HELLO'],
+    ["'HELLO'.pyupper()", 'HELLO'],
+    ["'Hello'.pyupper()", 'HELLO'],
+    ["'Hello1234'.pyupper()", 'HELLO1234'],
+    
+    
+    ["'one two three'.pypartition('two')", ['one ', 'two', ' three']],
+    ["'one | three'.pypartition('|')", ['one ', '|', ' three']],
+    ["'one | | three'.pypartition('|')", ['one ', '|', ' | three']],
+    
+    ["'one two three'.pyrpartition('two')", ['one ', 'two', ' three']],
+    ["'one | three'.pyrpartition('|')", ['one ', '|', ' three']],
+    ["'one | | three'.pyrpartition('|')", ['one | ', '|', ' three']],
+    
+    ["'one two three'.pysplit('two')", ['one ', ' three']],
+    ["'one two three'.pyrsplit('two')", ['one ', ' three']],  
+    ["' 1  2   3  '.pysplit()", ['1', '2', '3']],
+    ["'1,2,3,4,5,6,'.pysplit(',')", ['1', '2', '3', '4', '5', '6', '']],
+    ["'1,2,3,4,5,6,'.pyrsplit(',')", ['1', '2', '3', '4', '5', '6', '']],
+    ["'1,2,3,4,5,6,'.pysplit(',', 3)", ['1', '2', '3', '4,5,6,']],
+    ["'1,2,3,4,5,6,'.pyrsplit(',', 3)", ['1,2,3,4', '5', '6', '']],    
+    ["'hello'.pysplit('')", ['h', 'e', 'l', 'l', 'o']],
+    ["'hello'.pyrsplit('')", ['h', 'e', 'l', 'l', 'o']],
+    ["'hello'.pysplit('', 1)", ['h', 'ello']],
+    ["'hello'.pyrsplit('', 1)", ['hell', 'o']],
+    ["'hello'.pyrsplit('', 2)", ['hel', 'l', 'o']],
+    ["'hello'.pyrsplit('', 3)", ['he', 'l', 'l', 'o']],
+    ["'hello'.pyrsplit('', 4)", ['h', 'e', 'l', 'l', 'o']],
+    ["'hello'.pyrsplit('', 5)", ['h', 'e', 'l', 'l', 'o']],
+    
+    ["' 1  2   3  '.pyrsplit()", ['1', '2', '3']],
+
+    
+    ["'line1\\nline2\\r\\nline3\\r'.pysplitlines()", ['line1', 'line2', 'line3']],
+    ["'line1\\nline2\\r\\nline3\\r'.pysplitlines(true)", ['line1\n', 'line2\r\n', 'line3\r']],
+    ["'line1\\nline2\\r\\nline3'.pysplitlines()", ['line1', 'line2', 'line3']],
+    ["'line1\\nline2\\r\\nline3'.pysplitlines(true)", ['line1\n', 'line2\r\n', 'line3']],    
+    ["'line1\\nline2\\r\\nline3\\n\\n'.pysplitlines()", ['line1', 'line2', 'line3', '']],
+    ["'line1\\nline2\\r\\nline3\\n\\n'.pysplitlines(true)", ['line1\n', 'line2\r\n', 'line3\n', '\n']],        
+
+    
+    
+    // strip directly wraps lstrip and rstrip so it's not necessary to test 
+    // both
+    ["'hello'.pystrip()", 'hello'],
+    ["'hello  '.pystrip()", 'hello'],
+    ["'  hello'.pystrip()", 'hello'],
+    ["'hello_'.pystrip('_')", 'hello'],
+    ["'hello'.pystrip('eh')", 'llo'],
+
+
+    
+    ["'0123456789'.pyendswith('9')", true],
+    ["'0123456789'.pyendswith('89')", true],
+    ["'0123456789'.pyendswith('8')", false],
+    ["'0123456789'.pyendswith('79')", false],
+    ["'0123456789'.pystartswith('0')", true],
+    ["'0123456789'.pystartswith('01')", true],
+    ["'0123456789'.pystartswith('1')", false],
+    ["'0123456789'.pystartswith('02')", false],   
+    
+    ["'0123456789'.pystartswith(['0', '1', '2'])", true],
+    ["'0123456789'.pystartswith(['3', '1', '2'])", false],
+    ["'0123456789'.pyendswith(['9', '1', '2'])", true],
+    ["'0123456789'.pyendswith(['3', '1', '2'])", false
+    ],   
+    
+    ["'00000'.pyreplace('0', '1')", '11111'],
+    ["'00000'.pyreplace('0', '1', 1)", '10000'],
+    ["'00000'.pyreplace(/0{2}/g, '1', 1)", '1000'],
+    ["'00000'.pyreplace(/0{2}/g, '1')", '110'],
+    
+    ["'hello'.pyswapcase()", 'HELLO'],
+    ["'HELLO'.pyswapcase()", 'hello'],
+    ["'hElLo'.pyswapcase()", 'HeLlO'],
+    ["'h3Llo'.pyswapcase()", 'H3lLO'],
+    ["''.pyswapcase()", ''],
+    ["'12345 '.pyswapcase()", '12345 '],
+    
+    ["'this is a title'.pytitle()", 'This Is A Title'],
+    ["'HELLO'.pytitle()", 'Hello'],
+    ["'hElLo'.pytitle()", 'Hello'],
+    ["'h3Llo'.pytitle()", 'H3Llo'],
+    ["''.pytitle()", ''],
+    ["'12345 '.pytitle()", '12345 '],
+    
+    
+    ["pysum([1, 2, 3])", 6],
+    ["pysum([1, 2, 4])", 7],
+    ["pysum([1, 2, 4], 3)", 10],
+    ["pyproduct([1, 2, 3])", 6],
+    ["pyproduct([1, 2, 4])", 8],
+    ["pyproduct([1, 2, 4], 3)", 24],
+    
+    ["'{{}}'.pyformat(23)", '{}'],
+    ["'{} {}'.pyformat('hi', 'there')", 'hi there'],
+    ["'{name}'.pyformat({x:'1',name:'barry'})", 'barry'],
+    ["'{0.name}'.pyformat({x:'1',name:'barry'})", 'barry'],
+    ["'{1.name}'.pyformat({x:'1',name:'barry'},{x:'2',name:'brian'})", 'brian'],
+    
+    ["f=function(x){return x+1;}; g=function(x){return x*2;}; h=function(x){return x-3;};  pycompose([f,g,h])(10)", 15],
+    ["f=function(x){return x+1;}; g=function(x){return x*2;}; h=function(x){return x-3;};  pycompose(f,g,h)(10)", 15]
+    
+  ];
+  
+  for (var i=0; i<tests.length; i++)
+    test(tests[i][0], tests[i][1]);
+    
+  document.getElementById('body').innerHTML += '<p>All done, {} tests were run\
+, {} errors were encountered</p>'.pyformat(num_tests, num_errs);
+};
+
+var readyfunc_wrapper = function() {
+//   try {
+    readyfunc();
+//   } catch (e) {
+//     document.getElementById('body').innerHTML += 
+//       'UNCAUGHT EXCEPTION `{}` (<em>possibly</em> not a test failure but a bug in the testing)<br>'.pyformat(e) ;
+//   }
+};
+
+window.onload = readyfunc_wrapper;
+    </script>
+  </head>
+  <body id='body'>
+  <p> Running tests... </p>
+   
+  </body>
+</html>

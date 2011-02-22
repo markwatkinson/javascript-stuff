@@ -3,7 +3,6 @@
 ROOT = ../..
 
 
--include custom.mak
 
 JSC = $(ROOT)/extern/closure-compiler
 JSC_EXTERNS += $(shell ls $(ROOT)/extern/*.js)
@@ -26,8 +25,10 @@ SRC_ = $(BIN_DIR)/$(NAME).js
 
 DATE=${shell date +"%d/%m/%y %H:%M:%S"}
 
+-include custom.mak
 
-all: $(BIN_DIR) $(MIN_) $(SRC_) $(SRC)
+
+all:: $(BIN_DIR) $(MIN_) $(SRC_) $(SRC)
 
 $(BIN_DIR):
 	mkdir -p $(BIN_DIR)
