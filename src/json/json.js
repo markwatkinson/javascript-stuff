@@ -158,21 +158,53 @@ function readJson(json, errors) {
     while ((c = get()) !== false) {
       if (c === '\\') {
         var lookahead = get();
+        var append = '';
         switch(lookahead) {
-          case quote:
-          case '\\':
-          case '/':
+          
+          // strip the slash from these
+          case quote:  //fallthrough
+          case '\\':   // ....
+          case '/':    
+            append = lookahead;
+            break;
+          // these are real escape sequences which we need to encode
+          // into the string
           case 'b':
+            append = '\b';
+            break;
           case 'f':
+            append = '\f';
+            break;
           case 'n':
+            append = '\n';
+            break;
           case 'r':
+            append = '\r';
+            break;
           case 't':
+            append = '\t';
+            break;
           case 'u':
+            // unicode. To build this here we need to look at the next four 
+            // chars. Interestingly just leaving '\u' and concatenating the
+            // sequence seems to pass Chrome and Firefox but IE doesn't like it.
+            var hex = peek(4);
+            var hex_ = '';
+            for (var i=0; i<hex.length; i++) {
+              if (!(/[a-fA-F0-9]/.test(hex.charAt(i)))) {
+                error('Expected hex digit, found: "' + hex.charAt(i) + '"', 0);
+                break;
+              }
+              hex_ += get();
+            }
+            append = String.fromCharCode( parseInt(hex_, 16) );            
             break;
           default:
             error('Unrecognised escape sequence: \\' + lookahead, 0);
+            append = c + lookahead;
+            break;
         }
-        ret += c + lookahead;
+        ret += append;
       }
       else if (c === quote) {
         stack.pop();
@@ -440,34 +472,29 @@ function readJson(json, errors) {
 
 /**
  * @param {*} object
+ * @param {boolean=} strict
  * @return {string}
  * 
  * FIXME: this will infinite recurse on circular references.
+ * 
+ * If strict is set to true and any of: undefined, NaN, [+-]?Infinfity occurs 
+ *  anywhere in the input, an exception will be thrown;
  */
-function writeJson(object) {  
+function writeJson(object, strict) {  
   var i, vals;
+  strict = !!strict;
   
-  if (typeof object === 'undefined')
+  if (typeof object === 'undefined') {
+    if (strict) {
+      throw 'undefined object was given to JSON encoder';
+    }
     return 'undefined';
+  }
   else if (object === null)
     return 'null';
-  else if (typeof object === 'string'){
-    // This might be wrong.
-    return '"' + object.replace(/(\\)*(["'])/g, function($0, $1, $2) {
-      $1 = $1 || '';
-      var escaped = ($1.length % 2);
-      if (escaped) {
-        if ($2 === "'") {
-          return $1.slice(1) + $2;
-        }
-        else return $0;
-      }
-      else {
-        if ($2 === '"')
-          return '\\' + $0;
-        else return $0;
-      }
-    }) + '"';
+  else if (typeof object === 'string') {
+    return '"' + object.replace(/[\"\\/\b\f\n\r\t]/g, 
+                                function($0) { return '\\' + $0; })  + '"';
   }
   else if (object.constructor.toString().indexOf('Array') !== -1) {
     vals = [];
@@ -483,6 +510,16 @@ function writeJson(object) {
     }
     return '{' + vals.join(',') + '}';
   }
+  
+  else if (typeof object === 'number') {
+    if (strict && isNaN(object)) {
+      throw 'NaN was given to JSON encoder';
+    }
+    else if (strict && !isFinite(object)) {
+      throw '+/- Infinity was given to JSON encoder';
+    }
+    return object.toString();
+  }  
   else if (object.toString) 
     return object.toString();
   else // meh

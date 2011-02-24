@@ -1,3 +1,8 @@
+/**
+ * Syntax highlighting via AJAX.
+ * See asgaard.co.uk/misc/jquery/?show=luminousify for details
+ */
+
 (function($){
   var __included = false;
   
@@ -5,8 +10,7 @@
     var $t = this,
         i = 0;
     
-    options = $.extend(
-      {
+    options = $.extend({
         style: 'luminous_light.css',
         language: false,
         defaultLanguage: false,
@@ -17,7 +21,7 @@
         line_numbers: false,
         group: 10 // number of code snippets to group into one request.
                  // This reduces the HTTP overhead but also ties up the server 
-                 // for longer at once. 5-10 is resaonable.
+                 // for longer at once. 5-10 is reasonable.
                  // server side maximum is 20.
       }, options);
     
@@ -58,7 +62,6 @@
         var t = $($t.get(i+j));
         var code = t.html();
 
-
         var language = options.language;
         if (!language)
           language = t.attr('lang');
@@ -69,26 +72,29 @@
         reqs.push( { code: code, language: language, line_numbers: options.line_numbers,
                    inline: options.inline, escaped: true} );
       }
-      
-      
-      
-      
-      
-      $.post(options.url,
-             {
-               requests: reqs
-             },
-        
-        function(data) {
+      $.post(options.url, { requests: reqs },function(data) {
           // the return is JSON encoded, but we know it's just an array of 
           // strings. To avoid depending on a JSON parser we're going to 
           // regex extract them
           var strings = data.match(/"([^\\"]+|\\"|\\.)*"/g);
           for (var a = 0; a<strings.length; a++) {
-            // we KNOW anything in here is not executable code because it's 
-            // wrapped in quotes. It may contain escape sequences. The easiest
-            // way to decode these therefore is to eval() it. This is safe.       
-            var s = eval(strings[a]); 
+            // now we need to unescape some bits. I think this is right.
+            var s = strings[a].slice(1, -1).replace(/\\(u[a-fA-F0-9]{4}|.)/g, function($0, $1){ 
+              // unicode
+              if ($1.charAt(0) === 'u')
+                return String.fromCharCode(parseInt($1.slice(1), 16));
+              
+              switch($1) {
+                // things that translate into real escape sequences
+                case 'b': return '\b';
+                case 'f': return '\f';                
+                case 'n': return '\n';
+                case 'r': return '\r';
+                case 't': return '\t';
+                // other stuff which we can drop the slash from, like \"
+                default: return $1;
+              }              
+            });
             var $r = $(s);
             if (!options.inline)
               $r.addClass('luminousified');

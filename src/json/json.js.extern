@@ -7,6 +7,7 @@ function readJson(json, errors) {}
 
 /**
  * @param {*} object
+ * @param {boolean=} strict
  * @return {string}
  */
-function writeJson(object) {}
+function writeJson(object, strict) {}
