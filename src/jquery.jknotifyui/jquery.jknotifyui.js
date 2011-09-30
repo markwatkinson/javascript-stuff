@@ -127,8 +127,12 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       
       // if selections is an object... the order is probably undefined
       // let's see how browsers handle it before changing it.
-      $n.jK.selectInput = function(text, name, selections, default_) {
+      $n.jK.selectInput = function(text, name, selections, default_,
+          changeOnClick) {
         var $i = $('<select>');
+        if (changeOnClick) {
+          $i.change(function() {$n.jK.close(inputsToMap());} );
+        }
         for (var key in selections) {
           if (!selections.hasOwnProperty(key))
             continue;
