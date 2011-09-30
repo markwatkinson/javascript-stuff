@@ -200,6 +200,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       }
       $n.jK.closable = function(c) {
         options.closable = c;
+        return $n;
       };
       
       $n.jK.finish = function() {
