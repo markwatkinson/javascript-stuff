@@ -223,7 +223,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
       }
       title.append(
         $('<span>').html(options.title? options.title : '&nbsp')
-                  .css('margin-left', '0.5em')
+                  .css('margin-left', '0.5em').addClass('title')
       );
       titleBar.append(title);
       if (options.closable) {
